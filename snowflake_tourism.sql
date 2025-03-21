@@ -11,7 +11,7 @@ CREATE FILE FORMAT TOURISM.FILE_FORMATS.tsv_format
     EMPTY_FIELD_AS_NULL = true
     FIELD_OPTIONALLY_ENCLOSED_BY = '"'
     DATE_FORMAT = 'YYYY-MM-DD';
-    
+
 CREATE OR REPLACE FILE FORMAT TOURISM.FILE_FORMATS.csv_format
     TYPE = CSV
     FIELD_DELIMITER = ','
@@ -20,7 +20,7 @@ CREATE OR REPLACE FILE FORMAT TOURISM.FILE_FORMATS.csv_format
     EMPTY_FIELD_AS_NULL = true
     FIELD_OPTIONALLY_ENCLOSED_BY = '"'
     DATE_FORMAT = 'YYYY-MM-DD';
-    
+
 CREATE STAGE TOURISM.external_stages.s3_stage
 URL = 's3://s3-tourism-data'
 CREDENTIALS = (AWS_KEY_ID = 'KEYAAAAAAAA' AWS_SECRET_KEY = 'SECRETAAAA');
@@ -44,11 +44,12 @@ CREATE OR REPLACE TABLE TOURISM.RAW.month_of_departure(
 );
 
 COPY INTO TOURISM.RAW.month_of_departure
-    FROM @TOURISM.EXTERNAL_STAGES.s3_stage/month_of_departure.tsv
+    FROM @TOURISM.EXTERNAL_STAGES.s3_stage/tourism_month_departure.tsv
     FILE_FORMAT = (FORMAT_NAME=TOURISM.FILE_FORMATS.tsv_format)
     ON_ERROR='CONTINUE';
 
 SELECT * from TOURISM.RAW.month_of_departure;
+TRUNCATE TABLE TOURISM.RAW.month_of_departure;
 
 
 CREATE OR REPLACE TABLE TOURISM.RAW.age_group(
@@ -68,15 +69,53 @@ CREATE OR REPLACE TABLE TOURISM.RAW.age_group(
 );
 
 COPY INTO TOURISM.RAW.age_group
-    FROM @TOURISM.EXTERNAL_STAGES.s3_stage/age_group.tsv
+    FROM @TOURISM.EXTERNAL_STAGES.s3_stage/tourism_age.tsv
     FILE_FORMAT = (FORMAT_NAME=TOURISM.FILE_FORMATS.tsv_format)
     ON_ERROR='CONTINUE';
 
 SELECT * from TOURISM.RAW.age_group;
+TRUNCATE TABLE TOURISM.RAW.age_group;
 
-SELECT OPIS, YEAR_2012 FROM TOURISM.RAW.month_of_departure
-WHERE OPIS LIKE '%M01%' AND OPIS LIKE '%PL%';
 
+CREATE OR REPLACE TABLE TOURISM.RAW.tourism_gender(
+    opis string,
+    year_2012 string,
+    year_2013 string,
+    year_2014 string,
+    year_2015 string,
+    year_2016 string,
+    year_2017 string,
+    year_2018 string,
+    year_2019 string,
+    year_2020 string,
+    year_2021 string,
+    year_2022 string,
+    year_2023 string
+);
+
+
+COPY INTO TOURISM.RAW.tourism_gender
+    FROM @TOURISM.EXTERNAL_STAGES.s3_stage/tourism_gender.tsv
+    FILE_FORMAT = (FORMAT_NAME=TOURISM.FILE_FORMATS.tsv_format)
+    ON_ERROR='CONTINUE';
+
+SELECT * from TOURISM.RAW.tourism_gender;
+
+CREATE OR REPLACE TABLE TOURISM.RAW.tourism_booking_channel(
+    opis string,
+    year_2020 string,
+    year_2021 string,
+    year_2022 string,
+    year_2023 string
+);
+
+
+COPY INTO TOURISM.RAW.tourism_booking_channel
+    FROM @TOURISM.EXTERNAL_STAGES.s3_stage/tourism_booking_channel.tsv
+    FILE_FORMAT = (FORMAT_NAME=TOURISM.FILE_FORMATS.tsv_format)
+    ON_ERROR='CONTINUE';
+
+SELECT * from TOURISM.RAW.tourism_booking_channel;
 
 
 CREATE OR REPLACE TABLE TOURISM.RAW.unwto_inbound_regions(

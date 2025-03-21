@@ -1,0 +1,15 @@
+version: 2
+
+sources:
+  - name: tourism
+    database: TOURISM
+    schema: raw
+    tables:
+      - name: month_of_departure
+      - name: unwto_inbound_regions
+      - name: unwto_outbound_tourism_departures
+      - name: unwto_outbound_tourism_expenditure
+      - name: unwto_tourism_industries
+      - name: age_group
+      - name: tourism_gender
+      - name: tourism_booking_channel
