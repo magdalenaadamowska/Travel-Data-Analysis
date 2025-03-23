@@ -1,0 +1,6 @@
+---
+pre-commit:
+  image: docker.io/jfxs/pre-commit:latest
+  stage: test
+  script:
+    - task --taskfile /lint.yml pre-commit DIR=$(pwd)
