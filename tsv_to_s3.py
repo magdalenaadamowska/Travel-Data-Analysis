@@ -1,12 +1,12 @@
-import pandas as pd
-import requests
-from io import BytesIO
-from io import StringIO
-import csv
-import boto3
+"""Mój skrypt"""
+
 import gzip
 import json
+from io import BytesIO, StringIO
 
+import boto3
+import pandas as pd
+import requests
 
 with open("s3_tourism_credentials.json", "r") as credentials_file:
     credentials = json.load(credentials_file)
