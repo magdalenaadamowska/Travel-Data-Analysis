@@ -2,7 +2,6 @@ import pandas as pd
 import requests
 from io import BytesIO
 from io import StringIO
-import csv
 import boto3
 import json
 

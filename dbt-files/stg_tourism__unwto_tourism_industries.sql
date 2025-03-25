@@ -85,8 +85,8 @@ from q7
 )
 
 SELECT * from final_unwto_tourism_industries
-where country = 'POLAND'
-ORDER BY year_of_travel
+
+
 
 
 

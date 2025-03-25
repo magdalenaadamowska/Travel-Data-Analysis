@@ -8,7 +8,7 @@ import boto3
 import pandas as pd
 import requests
 
-with open("s3_tourism_credentials.json", "r") as credentials_file:
+with open("s3_tourism_credentials.json", "r", encoding="UTF-8") as credentials_file:
     credentials = json.load(credentials_file)
 
 aws_key_id = credentials["aws_key_id"]
@@ -42,6 +42,7 @@ for u_name, u in url.items():
     from_url = requests.get(u)
     object_url = BytesIO(from_url.content)
     with gzip.open(object_url, "rt", encoding="utf-8") as gz_file:
+        # FIXME: remove unnecessary steps
         file_open = pd.read_csv(gz_file, delimiter="\t")
         file_name = u_name
         csv_buffer = StringIO()
