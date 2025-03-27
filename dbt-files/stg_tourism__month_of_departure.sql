@@ -1,4 +1,4 @@
-with
+with 
 
 source_group
 AS (
@@ -7,7 +7,7 @@ SELECT * FROM {{source("tourism", 'month_of_departure')}}
 
 normalized_month_of_departure
 AS (
-SELECT
+SELECT 
     SPLIT_PART(OPIS,',', 1) as frequency,
     SPLIT_PART(OPIS,',', 2) as destination,
     SPLIT_PART(OPIS,',', 3) as reason,
@@ -22,7 +22,7 @@ GROUP BY frequency, destination, reason, lenght_of_travel, month_of_travel, numb
 
 UNION
 
-SELECT
+SELECT 
     SPLIT_PART(OPIS,',', 1) as frequency,
     SPLIT_PART(OPIS,',', 2) as destination,
     SPLIT_PART(OPIS,',', 3) as reason,
@@ -37,7 +37,7 @@ GROUP BY frequency, destination, reason, lenght_of_travel, month_of_travel, numb
 
 UNION
 
-SELECT
+SELECT 
     SPLIT_PART(OPIS,',', 1) as frequency,
     SPLIT_PART(OPIS,',', 2) as destination,
     SPLIT_PART(OPIS,',', 3) as reason,
@@ -52,7 +52,7 @@ GROUP BY frequency, destination, reason, lenght_of_travel, month_of_travel, numb
 
 UNION
 
-SELECT
+SELECT 
     SPLIT_PART(OPIS,',', 1) as frequency,
     SPLIT_PART(OPIS,',', 2) as destination,
     SPLIT_PART(OPIS,',', 3) as reason,
@@ -67,7 +67,7 @@ GROUP BY frequency, destination, reason, lenght_of_travel, month_of_travel, numb
 
 UNION
 
-SELECT
+SELECT 
     SPLIT_PART(OPIS,',', 1) as frequency,
     SPLIT_PART(OPIS,',', 2) as destination,
     SPLIT_PART(OPIS,',', 3) as reason,
@@ -82,7 +82,7 @@ GROUP BY frequency, destination, reason, lenght_of_travel, month_of_travel, numb
 
 UNION
 
-SELECT
+SELECT 
     SPLIT_PART(OPIS,',', 1) as frequency,
     SPLIT_PART(OPIS,',', 2) as destination,
     SPLIT_PART(OPIS,',', 3) as reason,
@@ -97,7 +97,7 @@ GROUP BY frequency, destination, reason, lenght_of_travel, month_of_travel, numb
 
 UNION
 
-SELECT
+SELECT 
     SPLIT_PART(OPIS,',', 1) as frequency,
     SPLIT_PART(OPIS,',', 2) as destination,
     SPLIT_PART(OPIS,',', 3) as reason,
@@ -112,7 +112,7 @@ GROUP BY frequency, destination, reason, lenght_of_travel, month_of_travel, numb
 
 UNION
 
-SELECT
+SELECT 
     SPLIT_PART(OPIS,',', 1) as frequency,
     SPLIT_PART(OPIS,',', 2) as destination,
     SPLIT_PART(OPIS,',', 3) as reason,
@@ -127,7 +127,7 @@ GROUP BY frequency, destination, reason, lenght_of_travel, month_of_travel, numb
 
 UNION
 
-SELECT
+SELECT 
     SPLIT_PART(OPIS,',', 1) as frequency,
     SPLIT_PART(OPIS,',', 2) as destination,
     SPLIT_PART(OPIS,',', 3) as reason,
@@ -142,7 +142,7 @@ GROUP BY frequency, destination, reason, lenght_of_travel, month_of_travel, numb
 
 UNION
 
-SELECT
+SELECT 
     SPLIT_PART(OPIS,',', 1) as frequency,
     SPLIT_PART(OPIS,',', 2) as destination,
     SPLIT_PART(OPIS,',', 3) as reason,
@@ -157,7 +157,7 @@ GROUP BY frequency, destination, reason, lenght_of_travel, month_of_travel, numb
 
 UNION
 
-SELECT
+SELECT 
     SPLIT_PART(OPIS,',', 1) as frequency,
     SPLIT_PART(OPIS,',', 2) as destination,
     SPLIT_PART(OPIS,',', 3) as reason,
@@ -172,7 +172,7 @@ GROUP BY frequency, destination, reason, lenght_of_travel, month_of_travel, numb
 
 UNION
 
-SELECT
+SELECT 
     SPLIT_PART(OPIS,',', 1) as frequency,
     SPLIT_PART(OPIS,',', 2) as destination,
     SPLIT_PART(OPIS,',', 3) as reason,
@@ -196,8 +196,8 @@ where reason = 'PER' and country_of_tourist = 'PL' and destination in ('DOM', 'F
 
 ready_month_of_departure_names
 as (
-select
-    case
+select 
+    case 
         WHEN destination = 'DOM' then 'Domestic'
         WHEN destination = 'FOR' then 'Foreign'
     END as Destination,
@@ -207,7 +207,7 @@ select
         WHEN lenght_of_travel = 'N_GE4' THEN '4 nights and over'
     END as lenght_of_trip,
     case
-        WHEN month_of_travel = 'M01' THEN 'January'
+        WHEN month_of_travel = 'M01' THEN 'January'     
         WHEN month_of_travel = 'M02' THEN 'February'
         WHEN month_of_travel = 'M03' THEN 'March'
         WHEN month_of_travel = 'M04' THEN 'April'
@@ -223,10 +223,11 @@ select
     year_of_travel as year_of_trip,
     number_of_trips
 from ready_month_of_departure
-WHERE lenght_of_trip != '1 day and over')
+)
+
 
 select * from ready_month_of_departure_names
+WHERE lenght_of_trip in ('1-3 nights', '4 nights and over')
 
---select * from ready_month_of_departure
---where year_of_travel = '2020' and month_of_travel = 'M01'
---order by destination
+
+

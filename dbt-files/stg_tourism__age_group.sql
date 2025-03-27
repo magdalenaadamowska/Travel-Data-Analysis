@@ -1,4 +1,4 @@
-with
+with 
 
 source_group
 AS (
@@ -7,7 +7,7 @@ SELECT * FROM {{source("tourism", 'age_group')}}
 
 normalized_age_group
 AS (
-SELECT
+SELECT 
     SPLIT_PART(OPIS,',', 1) as frequency,
     SPLIT_PART(OPIS,',', 2) as reason,
     SPLIT_PART(OPIS,',', 3) as destination,
@@ -22,7 +22,7 @@ GROUP BY frequency, reason, destination, lenght_of_travel, age_group, number_1, 
 
 UNION
 
-SELECT
+SELECT 
     SPLIT_PART(OPIS,',', 1) as frequency,
     SPLIT_PART(OPIS,',', 2) as reason,
     SPLIT_PART(OPIS,',', 3) as destination,
@@ -37,7 +37,7 @@ GROUP BY frequency, reason, destination, lenght_of_travel, age_group, number_1, 
 
 UNION
 
-SELECT
+SELECT 
     SPLIT_PART(OPIS,',', 1) as frequency,
     SPLIT_PART(OPIS,',', 2) as reason,
     SPLIT_PART(OPIS,',', 3) as destination,
@@ -52,7 +52,7 @@ GROUP BY frequency, reason, destination, lenght_of_travel, age_group, number_1, 
 
 UNION
 
-SELECT
+SELECT 
     SPLIT_PART(OPIS,',', 1) as frequency,
     SPLIT_PART(OPIS,',', 2) as reason,
     SPLIT_PART(OPIS,',', 3) as destination,
@@ -67,7 +67,7 @@ GROUP BY frequency, reason, destination, lenght_of_travel, age_group, number_1, 
 
 UNION
 
-SELECT
+SELECT 
     SPLIT_PART(OPIS,',', 1) as frequency,
     SPLIT_PART(OPIS,',', 2) as reason,
     SPLIT_PART(OPIS,',', 3) as destination,
@@ -82,7 +82,7 @@ GROUP BY frequency, reason, destination, lenght_of_travel, age_group, number_1, 
 
 UNION
 
-SELECT
+SELECT 
     SPLIT_PART(OPIS,',', 1) as frequency,
     SPLIT_PART(OPIS,',', 2) as reason,
     SPLIT_PART(OPIS,',', 3) as destination,
@@ -97,7 +97,7 @@ GROUP BY frequency, reason, destination, lenght_of_travel, age_group, number_1, 
 
 UNION
 
-SELECT
+SELECT 
     SPLIT_PART(OPIS,',', 1) as frequency,
     SPLIT_PART(OPIS,',', 2) as reason,
     SPLIT_PART(OPIS,',', 3) as destination,
@@ -112,7 +112,7 @@ GROUP BY frequency, reason, destination, lenght_of_travel, age_group, number_1, 
 
 UNION
 
-SELECT
+SELECT 
     SPLIT_PART(OPIS,',', 1) as frequency,
     SPLIT_PART(OPIS,',', 2) as reason,
     SPLIT_PART(OPIS,',', 3) as destination,
@@ -127,7 +127,7 @@ GROUP BY frequency, reason, destination, lenght_of_travel, age_group, number_1, 
 
 UNION
 
-SELECT
+SELECT 
     SPLIT_PART(OPIS,',', 1) as frequency,
     SPLIT_PART(OPIS,',', 2) as reason,
     SPLIT_PART(OPIS,',', 3) as destination,
@@ -142,7 +142,7 @@ GROUP BY frequency, reason, destination, lenght_of_travel, age_group, number_1, 
 
 UNION
 
-SELECT
+SELECT 
     SPLIT_PART(OPIS,',', 1) as frequency,
     SPLIT_PART(OPIS,',', 2) as reason,
     SPLIT_PART(OPIS,',', 3) as destination,
@@ -157,7 +157,7 @@ GROUP BY frequency, reason, destination, lenght_of_travel, age_group, number_1, 
 
 UNION
 
-SELECT
+SELECT 
     SPLIT_PART(OPIS,',', 1) as frequency,
     SPLIT_PART(OPIS,',', 2) as reason,
     SPLIT_PART(OPIS,',', 3) as destination,
@@ -172,7 +172,7 @@ GROUP BY frequency, reason, destination, lenght_of_travel, age_group, number_1, 
 
 UNION
 
-SELECT
+SELECT 
     SPLIT_PART(OPIS,',', 1) as frequency,
     SPLIT_PART(OPIS,',', 2) as reason,
     SPLIT_PART(OPIS,',', 3) as destination,
@@ -196,8 +196,8 @@ where reason = 'PER' and country_of_tourist = 'PL' and destination in ('DOM', 'F
 
 ready_age_group_names
 as (
-select
-    case
+select 
+    case 
         WHEN destination = 'DOM' then 'Domestic'
         WHEN destination = 'FOR' then 'Foreign'
     END as Destination,
@@ -206,7 +206,7 @@ select
         WHEN lenght_of_travel = 'N1-3' THEN '1-3 nights'
         WHEN lenght_of_travel = 'N_GE4' THEN '4 nights and over'
     END as lenght_of_trip,
-    CASE
+    CASE 
         WHEN age_group = 'Y_LT15' THEN '<15 years'
         WHEN age_group = 'Y15-24' THEN '15-24 years'
         WHEN age_group = 'Y35-44' THEN '35-44 years'
@@ -219,22 +219,11 @@ select
     year_of_travel as year_of_trip,
     number_of_nights_spent
 from ready_age_group
---WHERE age_group <> 'else groups'
-WHERE lenght_of_trip != '1 day and over')
-/*
-age_group_all_columns
-as(
-    SELECT destination,
-    lenght_of_travel,
-    age_group,
-    year_of_travel,
-    number_of_nights_spent
-from normalized_age_group
-where reason = 'PER' and country_of_tourist = 'PL' and destination in ('DOM', 'FOR')
 )
-*/
---
---select distinct age_group from ready_age_group
 select * from ready_age_group_names
-where age_group != 'else groups'
---where age_group = 'Y25-34' and year_of_travel = '2012'
+where age_group != 'else groups' and lenght_of_trip in ('1-3 nights', '4 nights and over')
+
+
+
+
+
