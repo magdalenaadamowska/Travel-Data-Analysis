@@ -70,7 +70,7 @@ select
 from q6
 ),
 
-final_unwto_inbound_regions
+q8
 as (
 
 select 
@@ -80,12 +80,26 @@ select
     CAST(((TRY_CAST(number_of_tourists as FLOAT)) * 1000) AS INT)  AS number_of_tourists
 from q7
 )
+/*
+,
+
+q9 as (
+select 
+    country,
+    region_of_tourists, year_of_travel,
+    SUM(TRY_CAST(REGEXP_REPLACE(number_of_tourists, '[^0-9]+$', '') as integer)) AS number_of_tourists    
+from q8
+)
+*/
 
 --SELECT * from final_unwto_inbound_regions
 --where country = 'POLAND'
 --Order by number_of_tourists desc
-select * from q7
 
---TRY_CAST(REGEXP_REPLACE(number_of_tourists, '[^0-9]+$', '') as float)
+select country, region_of_tourists, year_of_travel, coalesce(number_of_tourists, '0') as number_of_tourists
+from q8
+where region_of_tourists = 'Europe' and year_of_travel ='2022'
+order by number_of_tourists desc
 
---REGEXP_CONTAINS(number_of_tourists, '[0-9]+[\.[0-9]+])?')
+
+

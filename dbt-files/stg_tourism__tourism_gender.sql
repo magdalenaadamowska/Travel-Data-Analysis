@@ -208,6 +208,9 @@ select
 from ready_gender_group
 )
 
+
+
+
 select * from ready_gender_group_names
 where gender != 'total' and lenght_of_trip in ('1-3 nights', '4 nights and over')
 
