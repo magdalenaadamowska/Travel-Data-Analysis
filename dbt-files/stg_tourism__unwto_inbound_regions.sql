@@ -77,29 +77,26 @@ select
     CAST(country as VARCHAR) as country,
     CAST(region_of_tourists as VARCHAR) as region_of_tourists,
     CAST(year_of_travel as INT) as year_of_travel,
-    CAST(((TRY_CAST(number_of_tourists as FLOAT)) * 1000) AS INT)  AS number_of_tourists
+    coalesce(CAST(((TRY_CAST(number_of_tourists as FLOAT)) * 1000) AS INT), 0) AS number_of_tourists
 from q7
+),
+q9 
+as (
+
+    select country, year_of_travel , number_of_tourists
+    from q8
+    where region_of_tourists = 'Europe'
 )
-/*
-,
 
-q9 as (
-select 
-    country,
-    region_of_tourists, year_of_travel,
-    SUM(TRY_CAST(REGEXP_REPLACE(number_of_tourists, '[^0-9]+$', '') as integer)) AS number_of_tourists    
-from q8
-)
-*/
-
---SELECT * from final_unwto_inbound_regions
---where country = 'POLAND'
---Order by number_of_tourists desc
-
-select country, region_of_tourists, year_of_travel, coalesce(number_of_tourists, '0') as number_of_tourists
-from q8
-where region_of_tourists = 'Europe' and year_of_travel ='2022'
-order by number_of_tourists desc
-
-
-
+SELECT t1.country, t1.year_of_travel, t1.number_of_tourists
+FROM q9 t1
+JOIN (
+    SELECT year_of_travel, country, number_of_tourists
+    FROM q9 t2
+    WHERE ( 
+        SELECT COUNT(DISTINCT t3.number_of_tourists)
+        FROM q9 t3
+        WHERE t3.year_of_travel = t2.year_of_travel AND t3.number_of_tourists > t2.number_of_tourists
+    ) < 10
+) top_countries ON t1.country = top_countries.country AND t1.year_of_travel = top_countries.year_of_travel
+ORDER BY t1.year_of_travel, t1.number_of_tourists DESC

@@ -209,6 +209,7 @@ select
     CASE 
         WHEN age_group = 'Y_LT15' THEN '<15 years'
         WHEN age_group = 'Y15-24' THEN '15-24 years'
+        WHEN age_group = 'Y25-34' THEN '25-34 years'
         WHEN age_group = 'Y35-44' THEN '35-44 years'
         WHEN age_group = 'Y45-54' THEN '45-54 years'
         WHEN age_group = 'Y55-64' THEN '55-64 years'
@@ -220,8 +221,10 @@ select
     number_of_nights_spent
 from ready_age_group
 )
+
 select * from ready_age_group_names
 where age_group != 'else groups' and lenght_of_trip in ('1-3 nights', '4 nights and over')
+
 
 
 
