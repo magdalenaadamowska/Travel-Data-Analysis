@@ -1,23 +1,23 @@
 import pandas as pd
 import requests
 from io import BytesIO
-from io import StringIO
 import boto3
 import json
+import yaml
 
+CREDENTIALS_FILE = "s3_tourism_credentials.json"
+XSLX_LIST_FILENAME = "xslx_sources.yaml"
 
-with open("s3_tourism_credentials.json", "r") as credentials_file:
+print("Loading credentials")
+with open(CREDENTIALS_FILE, "r") as credentials_file:
     credentials = json.load(credentials_file)
 
 aws_key_id = credentials["aws_key_id"]
 aws_secret_key = credentials["aws_secret_key"]
-bucket_name = "s3-tourism-data"
-region_name = "eu-central-1"
+bucket_name = credentials["bucket_name"]
+region_name = credentials["region_name"]
 
-
-URL = "https://pre-webunwto.s3.eu-west-1.amazonaws.com/s3fs-public/2024-07/unwto-all-data-download_2022.xlsx"
-from_url = requests.get(URL)
-excel_file = pd.read_excel(BytesIO(from_url.content), sheet_name=None)
+print("Connecting to AWS")
 s3 = boto3.client(
     "s3",
     aws_access_key_id=aws_key_id,
@@ -25,47 +25,25 @@ s3 = boto3.client(
     region_name=region_name,
 )
 
-# excel_file = pd.read_excel("unwto-all-world.xlsx", sheet_name=None)
-unwto_inbound_tourism_regions = excel_file["Inbound Tourism-Regions"]
-unwto_outbound_tourism_departures = excel_file["Outbound Tourism-Departures"]
-unwto_outbound_tourism_expenditure = excel_file["Outbound Tourism-Expenditure"]
-unwto_tourism_industries = excel_file["Tourism Industries"]
+print("Loading XLSX files list")
+with open(XSLX_LIST_FILENAME) as url_file:
+    xslx_files = yaml.safe_load(url_file)
 
+print("Processing XLSX requests")
+for xslx_file in xslx_files:
+    source_url = xslx_file["url"]
+    print(f"Processing URL {source_url}")
+    file_request = requests.get(source_url)
+    remote_file = BytesIO(file_request.content)
+    print("Loading XLSX to Pandas")
+    excel_file = pd.read_excel(remote_file, sheet_name=None)
 
-# unwto_inbound_tourism_regions = pd.read_excel("unwto-all-world.xlsx", sheet_name="Inbound Tourism-Regions")
-# unwto_outbound_tourism_departures = pd.read_excel("unwto-all-world.xlsx", sheet_name="Outbound Tourism-Departures")
-# unwto_outbound_tourism_expenditure = pd.read_excel("unwto-all-world.xlsx", sheet_name="Outbound Tourism-Expenditure")
-# unwto_tourism_industries = pd.read_excel("unwto-all-world.xlsx", sheet_name="Tourism Industries")
-# xls = pd.ExcelFile("unwto-all-world.xlsx")
-# print(excel_file.keys())
-# print (xls.sheet_names)
-# df = pd.DataFrame(excel_file)
-# print(df)
-
-# print (unwto_inbound_tourism_regions)
-
-# print (unwto_tourism_industries)#
-
-# csv_unwto_inbound_tourism_regions = unwto_inbound_tourism_regions.to_csv("unwto_inbound_tourism_regions.csv", index = None, header = True)
-# csv_unwto_outbound_tourism_departures = unwto_outbound_tourism_departures.to_csv("unwto_outbound_tourism_departures.csv", index = None, header = True)
-# csv_unwto_outbound_tourism_expenditure = unwto_outbound_tourism_expenditure.to_csv("unwto_outbound_tourism_expenditure.csv", index = None, header = True)
-# csv_unwto_tourism_industries = unwto_tourism_industries.to_csv("unwto_tourism_industries.csv", index = None, header = True)
-
-unwto_frames = {
-    "unwto_inbound_tourism_regions.csv": unwto_inbound_tourism_regions,
-    "unwto_outbound_tourism_departures.csv": unwto_outbound_tourism_departures,
-    "unwto_outbound_tourism_expenditure.csv": unwto_outbound_tourism_expenditure,
-    "unwto_tourism_industries.csv": unwto_tourism_industries,
-}
-
-for file_name, f in unwto_frames.items():
-    csv_buffer = StringIO()
-    f.to_csv(csv_buffer, index=False)
-    csv_temp = csv_buffer.getvalue()
-    print(file_name)
-    s3.put_object(Bucket=bucket_name, Key=file_name, Body=csv_temp)
-
-# tourism_s3.upload_to_s3(BUCKET_NAME, csv_temp, f"{file_name}.csv")
-
-
-# print(unwto_inbound_tourism_regions.columns)
+    for sheet in xslx_file["sheets"]:
+        sm = sheet["sheet_name"]
+        print(f"Processing sheet {sm}")
+        df = excel_file[sm]
+        file_name = sheet["csv_name"]
+        print("Converting to CSV")
+        df.to_csv(file_name, sep=",", index=False, header=True)
+        print("Uploading to AWS")
+        s3.upload_file(file_name, bucket_name, file_name)

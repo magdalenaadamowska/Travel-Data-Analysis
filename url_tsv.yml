@@ -1,0 +1,12 @@
+---
+sources:
+- url: https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/tour_dem_tosex/?format=TSV&compressed=true
+  filename: tourism_gender.tsv
+- url: https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/tour_dem_tnage/?format=TSV&compressed=true
+  filename: tourism_age.tsv
+- url: https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/tour_dem_ttmd/?format=TSV&compressed=true
+  filename: tourism_month_departure.tsv
+- url: https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/tour_dem_ttacb/?format=TSV&compressed=true
+  filename: tourism_booking_channel.tsv
+- url: https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/tin00193/?format=TSV&compressed=true
+  filename: tourism_destination.tsv

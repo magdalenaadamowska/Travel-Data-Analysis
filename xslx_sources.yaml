@@ -1,0 +1,11 @@
+---
+- url: https://pre-webunwto.s3.eu-west-1.amazonaws.com/s3fs-public/2024-07/unwto-all-data-download_2022.xlsx
+  sheets:
+    - sheet_name: "Inbound Tourism-Regions"
+      csv_name: "unwto_inbound_tourism_regions.csv"
+    - sheet_name: "Outbound Tourism-Departures"
+      csv_name: "unwto_outbound_tourism_departures.csv"
+    - sheet_name: "Outbound Tourism-Expenditure"
+      csv_name: "unwto_outbound_tourism_expenditure.csv"
+    - sheet_name: "Tourism Industries"
+      csv_name: "unwto_tourism_industries.csv"

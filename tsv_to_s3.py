@@ -2,60 +2,38 @@
 
 import gzip
 import json
-from io import BytesIO, StringIO
+from io import BytesIO
 
 import boto3
 import pandas as pd
 import requests
+import yaml
 
 with open("s3_tourism_credentials.json", "r", encoding="UTF-8") as credentials_file:
     credentials = json.load(credentials_file)
 
 aws_key_id = credentials["aws_key_id"]
 aws_secret_key = credentials["aws_secret_key"]
-bucket_name = "s3-tourism-data"
-region_name = "eu-central-1"
+bucket_name = credentials["bucket_name"]
+region_name = credentials["region_name"]
+
 s3 = boto3.client(
     "s3",
     aws_access_key_id=aws_key_id,
     aws_secret_access_key=aws_secret_key,
     region_name=region_name,
 )
+with open("url_tsv.yml") as url_file:
+    urls = yaml.safe_load(url_file)
 
-url_gender = "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/tour_dem_tosex/?format=TSV&compressed=true"
-url_age = "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/tour_dem_tnage/?format=TSV&compressed=true"
-url_month_depature = "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/tour_dem_ttmd/?format=TSV&compressed=true"
-url_booking_channel = "https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/data/tour_dem_ttacb/?format=TSV&compressed=true"
-url = {
-    "tourism_gender.tsv": url_gender,
-    "tourism_age.tsv": url_age,
-    "tourism_month_departure.tsv": url_month_depature,
-    "tourism_booking_channel.tsv": url_booking_channel,
-}
-# from_url_gender = requests.get(url_gender)
-# from_url_age = requests.get(url_age)
-# #print(from_url_gender.content)
-# object_url_gender = BytesIO(from_url_gender.content)
-# object_url_age = BytesIO(from_url_gender.content)
+# print(urls)
 
-for u_name, u in url.items():
-    from_url = requests.get(u)
+for u in urls["sources"]:
+    source_url = u["url"]
+    file_name = u["filename"]
+    from_url = requests.get(source_url)
     object_url = BytesIO(from_url.content)
     with gzip.open(object_url, "rt", encoding="utf-8") as gz_file:
-        # FIXME: remove unnecessary steps
         file_open = pd.read_csv(gz_file, delimiter="\t")
-        file_name = u_name
-        csv_buffer = StringIO()
-        file_open.to_csv(csv_buffer, sep="\t", index=False, header=True)
         file_open.to_csv(file_name, sep="\t", index=False, header=True)
-        csv_temp = csv_buffer.getvalue()
-        s3.put_object(Bucket=bucket_name, Key=file_name, Body=csv_temp)
-
-# with gzip.open(object_url_gender,'rt', encoding='utf-8') as gz_gender_file:
-#     gender_file_open = pd.read_csv(gz_gender_file, delimiter = '\t')
-#     file_name = 'tourism_gender.tsv'
-#     csv_buffer = StringIO()
-#     gender_file = gender_file_open.to_csv(csv_buffer,sep ='\t', index = False, header = True)
-#     gender_file_open.to_csv(file_name, sep ='\t', index = False, header = True)
-#     csv_temp = csv_buffer.getvalue()
-#     s3.put_object(Bucket=BUCKET_NAME, Key=file_name, Body=csv_temp)
+        s3.upload_file(file_name, bucket_name, file_name)
