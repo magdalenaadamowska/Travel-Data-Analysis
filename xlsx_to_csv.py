@@ -6,7 +6,7 @@ import json
 import yaml
 
 CREDENTIALS_FILE = "s3_tourism_credentials.json"
-XSLX_LIST_FILENAME = "xslx_sources.yaml"
+XSLX_LIST_FILENAME = "xlsx_sources.yaml"
 
 print("Loading credentials")
 with open(CREDENTIALS_FILE, "r") as credentials_file:
@@ -27,18 +27,18 @@ s3 = boto3.client(
 
 print("Loading XLSX files list")
 with open(XSLX_LIST_FILENAME) as url_file:
-    xslx_files = yaml.safe_load(url_file)
+    xlsx_files = yaml.safe_load(url_file)
 
 print("Processing XLSX requests")
-for xslx_file in xslx_files:
-    source_url = xslx_file["url"]
+for xlsx_file in xlsx_files:
+    source_url = xlsx_file["url"]
     print(f"Processing URL {source_url}")
     file_request = requests.get(source_url)
     remote_file = BytesIO(file_request.content)
     print("Loading XLSX to Pandas")
     excel_file = pd.read_excel(remote_file, sheet_name=None)
 
-    for sheet in xslx_file["sheets"]:
+    for sheet in xlsx_file["sheets"]:
         sm = sheet["sheet_name"]
         print(f"Processing sheet {sm}")
         df = excel_file[sm]
