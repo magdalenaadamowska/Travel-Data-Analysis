@@ -20,10 +20,10 @@ python-installing:
 
 xlsx_conversion:
   stage: convert
-  script: 
+  script:
     - python3 xlsx_to_csv.py
-    
+
 tsv_conversion:
   stage: convert
-  script: 
+  script:
     - python3 tsv_to_s3.py

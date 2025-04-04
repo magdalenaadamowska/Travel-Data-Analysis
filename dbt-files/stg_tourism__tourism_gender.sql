@@ -1,4 +1,4 @@
-with 
+with
 
 source_group
 AS (
@@ -9,7 +9,7 @@ SELECT * FROM {{source("tourism", 'tourism_gender')}}
 
 normalized_age_group
 AS (
-SELECT 
+SELECT
     SPLIT_PART(OPIS,',', 1) as frequency,
     SPLIT_PART(OPIS,',', 2) as lenght_of_travel,
     SPLIT_PART(OPIS,',', 3) as destination,
@@ -23,7 +23,7 @@ GROUP BY frequency, lenght_of_travel, destination, gender, number_1, country_of_
 
 UNION
 
-SELECT 
+SELECT
     SPLIT_PART(OPIS,',', 1) as frequency,
     SPLIT_PART(OPIS,',', 2) as lenght_of_travel,
     SPLIT_PART(OPIS,',', 3) as destination,
@@ -37,7 +37,7 @@ GROUP BY frequency, lenght_of_travel, destination, gender, number_1, country_of_
 
 UNION
 
-SELECT 
+SELECT
     SPLIT_PART(OPIS,',', 1) as frequency,
     SPLIT_PART(OPIS,',', 2) as lenght_of_travel,
     SPLIT_PART(OPIS,',', 3) as destination,
@@ -51,7 +51,7 @@ GROUP BY frequency, lenght_of_travel, destination, gender, number_1, country_of_
 
 UNION
 
-SELECT 
+SELECT
     SPLIT_PART(OPIS,',', 1) as frequency,
     SPLIT_PART(OPIS,',', 2) as lenght_of_travel,
     SPLIT_PART(OPIS,',', 3) as destination,
@@ -65,7 +65,7 @@ GROUP BY frequency, lenght_of_travel, destination, gender, number_1, country_of_
 
 UNION
 
-SELECT 
+SELECT
     SPLIT_PART(OPIS,',', 1) as frequency,
     SPLIT_PART(OPIS,',', 2) as lenght_of_travel,
     SPLIT_PART(OPIS,',', 3) as destination,
@@ -79,7 +79,7 @@ GROUP BY frequency, lenght_of_travel, destination, gender, number_1, country_of_
 
 UNION
 
-SELECT 
+SELECT
     SPLIT_PART(OPIS,',', 1) as frequency,
     SPLIT_PART(OPIS,',', 2) as lenght_of_travel,
     SPLIT_PART(OPIS,',', 3) as destination,
@@ -93,7 +93,7 @@ GROUP BY frequency, lenght_of_travel, destination, gender, number_1, country_of_
 
 UNION
 
-SELECT 
+SELECT
     SPLIT_PART(OPIS,',', 1) as frequency,
     SPLIT_PART(OPIS,',', 2) as lenght_of_travel,
     SPLIT_PART(OPIS,',', 3) as destination,
@@ -107,7 +107,7 @@ GROUP BY frequency, lenght_of_travel, destination, gender, number_1, country_of_
 
 UNION
 
-SELECT 
+SELECT
     SPLIT_PART(OPIS,',', 1) as frequency,
     SPLIT_PART(OPIS,',', 2) as lenght_of_travel,
     SPLIT_PART(OPIS,',', 3) as destination,
@@ -121,7 +121,7 @@ GROUP BY frequency, lenght_of_travel, destination, gender, number_1, country_of_
 
 UNION
 
-SELECT 
+SELECT
     SPLIT_PART(OPIS,',', 1) as frequency,
     SPLIT_PART(OPIS,',', 2) as lenght_of_travel,
     SPLIT_PART(OPIS,',', 3) as destination,
@@ -135,7 +135,7 @@ GROUP BY frequency, lenght_of_travel, destination, gender, number_1, country_of_
 
 UNION
 
-SELECT 
+SELECT
     SPLIT_PART(OPIS,',', 1) as frequency,
     SPLIT_PART(OPIS,',', 2) as lenght_of_travel,
     SPLIT_PART(OPIS,',', 3) as destination,
@@ -149,7 +149,7 @@ GROUP BY frequency, lenght_of_travel, destination, gender, number_1, country_of_
 
 UNION
 
-SELECT 
+SELECT
     SPLIT_PART(OPIS,',', 1) as frequency,
     SPLIT_PART(OPIS,',', 2) as lenght_of_travel,
     SPLIT_PART(OPIS,',', 3) as destination,
@@ -163,7 +163,7 @@ GROUP BY frequency, lenght_of_travel, destination, gender, number_1, country_of_
 
 UNION
 
-SELECT 
+SELECT
     SPLIT_PART(OPIS,',', 1) as frequency,
     SPLIT_PART(OPIS,',', 2) as lenght_of_travel,
     SPLIT_PART(OPIS,',', 3) as destination,
@@ -183,12 +183,12 @@ as (
 SELECT destination, lenght_of_travel, gender, year_of_travel, number_of_travelers
 from normalized_age_group
 where country_of_tourist = 'PL' and destination in ('DOM', 'FOR')
-), 
+),
 
 ready_gender_group_names
 as (
-select 
-    case 
+select
+    case
         WHEN destination = 'DOM' then 'Domestic'
         WHEN destination = 'FOR' then 'Foreign'
     END as Destination,
@@ -197,7 +197,7 @@ select
         WHEN lenght_of_travel = 'N1-3' THEN '1-3 nights'
         WHEN lenght_of_travel = 'N_GE4' THEN '4 nights and over'
     END as lenght_of_trip,
-    CASE 
+    CASE
         WHEN gender = 'F' THEN 'Women'
         WHEN gender = 'M' THEN 'Men'
         else 'total'
@@ -213,14 +213,3 @@ from ready_gender_group
 
 select * from ready_gender_group_names
 where gender != 'total' and lenght_of_trip in ('1-3 nights', '4 nights and over')
-
-
-
-
-
-
-
-
-
-
-
