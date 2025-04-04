@@ -13,17 +13,21 @@ pre-commit:
 xlsx_conversion:
   image: python:3.13-bookworm
   stage: convert
-  script:
+  before_script:
     - apt update
     - apt install -y python3 python3-pip
     - pip3 install -r requirements.txt
+    - cp "$AWS_CREDS" s3_tourism_credentials.json
+  script:
     - python3 xlsx_to_csv.py
 
 tsv_conversion:
   image: python:3.13-bookworm
   stage: convert
-  script:
+  before_script:
     - apt update
     - apt install -y python3 python3-pip
     - pip3 install -r requirements.txt
+    - cp "$AWS_CREDS" s3_tourism_credentials.json
+  script:
     - python3 tsv_to_s3.py
