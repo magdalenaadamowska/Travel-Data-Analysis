@@ -3,6 +3,7 @@
 import gzip
 import json
 from io import BytesIO
+import os
 
 import boto3
 import pandas as pd
@@ -12,9 +13,10 @@ import yaml
 
 CREDENTIALS_FILE = "s3_tourism_credentials.json"
 TSV_LIST_FILENAME = "url_tsv.yml"
+SOURCE_FOLDER = "source_files"
 
 print("Loading credentials")
-with open(CREDENTIALS_FILE, "r", encoding="UTF-8") as credentials_file:
+with open(CREDENTIALS_FILE, encoding="UTF-8") as credentials_file:
     credentials = json.load(credentials_file)
 
 aws_key_id = credentials["aws_key_id"]
@@ -31,16 +33,21 @@ s3 = boto3.client(
 )
 
 print("Loading TSV files list")
-with open(TSV_LIST_FILENAME) as url_file:
+with open(TSV_LIST_FILENAME, encoding="UTF-8") as url_file:
     tsv_files = yaml.safe_load(url_file)
 
+print("Creating folder for source files")
+try:
+    os.mkdir(SOURCE_FOLDER)
+except FileExistsError:
+    pass
 
 print("Processing TSV requests")
 for tsv_file in tsv_files["sources"]:
     source_url = tsv_file["url"]
     file_name = tsv_file["filename"]
     print(f"Processing URL {source_url}")
-    file_request = requests.get(source_url)
+    file_request = requests.get(source_url, timeout=60)
     remote_file = BytesIO(file_request.content)
 
     print("Opening compressed file")
@@ -48,6 +55,6 @@ for tsv_file in tsv_files["sources"]:
         print("Loading TSV to Pandas")
         df = pd.read_csv(gz_file, delimiter="\t")
         print("Converting to CSV")
-        df.to_csv(file_name, sep="\t", index=False, header=True)
+        df.to_csv(f"{SOURCE_FOLDER}/{file_name}", sep="\t", index=False, header=True)
         print("Uploading to AWS")
-        s3.upload_file(file_name, bucket_name, file_name)
+        s3.upload_file(f"{SOURCE_FOLDER}/{file_name}", bucket_name, file_name)
