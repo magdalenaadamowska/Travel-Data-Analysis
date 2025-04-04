@@ -1,6 +1,29 @@
 ---
+stages:
+  - .pre
+  - prepare
+  - convert
+
 pre-commit:
   image: docker.io/jfxs/pre-commit:latest
-  stage: test
+  stage: .pre
   script:
     - task --taskfile /lint.yml pre-commit DIR=$(pwd)
+
+python-installing:
+  image: python:3.13-bookworm
+  stage: prepare
+  script:
+    - apt update
+    - apt install -y python3 python3-pip
+    - pip3 install -r requirements.txt
+
+xlsx_conversion:
+  stage: convert
+  script: 
+    - python3 xlsx_to_csv.py
+    
+tsv_conversion:
+  stage: convert
+  script: 
+    - python3 tsv_to_s3.py

@@ -1,3 +1,4 @@
 __pycache__
 access-keys/
 s3_tourism_credentials.json
+*.tsv
