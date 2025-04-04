@@ -1,4 +1,4 @@
-"""Mój skrypt"""
+"""TSV downloader and converter with AWS exporter"""
 
 import gzip
 import json
