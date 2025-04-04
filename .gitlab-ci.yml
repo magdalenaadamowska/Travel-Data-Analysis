@@ -1,7 +1,6 @@
 ---
 stages:
   - .pre
-  - prepare
   - convert
 
 pre-commit:
@@ -10,7 +9,7 @@ pre-commit:
   script:
     - task --taskfile /lint.yml pre-commit DIR=$(pwd)
 
-xlsx_conversion:
+.python_job:
   image: python:3.13-bookworm
   stage: convert
   before_script:
@@ -18,16 +17,13 @@ xlsx_conversion:
     - apt install -y python3 python3-pip
     - pip3 install -r requirements.txt
     - cp "$AWS_CREDS" s3_tourism_credentials.json
+
+xlsx_conversion:
+  extends: .python_job
   script:
     - python3 xlsx_to_csv.py
 
 tsv_conversion:
-  image: python:3.13-bookworm
-  stage: convert
-  before_script:
-    - apt update
-    - apt install -y python3 python3-pip
-    - pip3 install -r requirements.txt
-    - cp "$AWS_CREDS" s3_tourism_credentials.json
+  extends: .python_job
   script:
     - python3 tsv_to_s3.py
