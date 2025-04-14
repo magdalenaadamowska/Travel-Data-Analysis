@@ -1,37 +1,37 @@
 # **Tourism Data Analysis**
 
-## **Project Goal**
+### **Project Goal**
 
-    Analyze travel trends of Polish tourists
+- Analyze travel trends of Polish tourists
 
-    Provide insights for travel operators to optimize offers
+- Provide insights for travel operators to optimize offers
 
-## **Technologies**
+### **Technologies**
 
-    **Snowflake** – Data storage
+- **Snowflake** – Data storage
 
-    **dbt** – Data transformation
+- **dbt** – Data transformation
 
-    **SQL** – Data modeling
+- **SQL** – Data modeling
 
-    **Tableau** – Visualization
+- **Tableau** – Visualization
 
-    **Python** – Data ingestion from public URLs to S3
+- **Python** – Data ingestion from public URLs to S3
 
-    **GitLab CI/CD** – Automated pipeline for data loading
+- **GitLab CI/CD** – Automated pipeline for data loading
 
-## **Data Sources**
+### **Data Sources**
 
-    [United Nations World Tourism Organization (UNWTO)](https://www.unwto.org) – Global tourism stats (XLSX files)
+- [United Nations World Tourism Organization (UNWTO)](https://www.unwto.org) – Global tourism stats (XLSX files)
 
-    [Eurostat](https://ec.europa.eu/eurostat/data/database) – EU travel data (TSV files)
+- [Eurostat](https://ec.europa.eu/eurostat/data/database) – EU travel data (TSV files)
 
-## **Outputs**
+### **Outputs**
 
-    Interactive Tableau dashboard
+- Interactive Tableau dashboard
 
-    Visuals: bookings, demographics, destinations, seasonality, expenditure
+- Visuals: bookings, demographics, destinations, seasonality, expenditure
 
-## **Presentation**
+### **Presentation**
 
-    [Project Slides (Google Slides)] (https://docs.google.com/presentation/d/1qs3UIRQ5-HuqqduNPqPGDenVHPUck571MfyVD3c63vM/edit#slide=id.p)
+- [Project Slides](https://docs.google.com/presentation/d/1qs3UIRQ5-HuqqduNPqPGDenVHPUck571MfyVD3c63vM/edit#slide=id.p)
