@@ -1,5 +1,7 @@
 # **Tourism Data Analysis**
 
+[![Slides](img/animated_slides.gif)](https://docs.google.com/presentation/d/1qs3UIRQ5-HuqqduNPqPGDenVHPUck571MfyVD3c63vM/present)
+
 ### **Project Goal**
 
 - Analyze travel trends of Polish tourists
@@ -34,4 +36,4 @@
 
 ### **Presentation**
 
-- [Project Slides](https://docs.google.com/presentation/d/1qs3UIRQ5-HuqqduNPqPGDenVHPUck571MfyVD3c63vM/edit#slide=id.p)
+- [Project Slides](https://docs.google.com/presentation/d/1qs3UIRQ5-HuqqduNPqPGDenVHPUck571MfyVD3c63vM/present)
